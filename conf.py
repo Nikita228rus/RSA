@@ -100,14 +100,14 @@ def func_rsa_generation(size):
 
     coefficient = euclid_algorithm(q, p, False)[1]
 
-    return (n, e, d, p, q, pow(d, 1, p - 1), pow(d, 1, q - 1), coefficient)
+    return [n, e, d, p, q, pow(d, 1, p - 1), pow(d, 1, q - 1), coefficient]
 
 
-def int_to_bytes2(x: int) -> bytes:
+def int_to_bytes(x: int) -> bytes:
     return x.to_bytes((x.bit_length() + 7) // 8, 'big')
 
 
-def int_to_bytes(x):
+def int_to_bytes2(x):
     return x.to_bytes(math.ceil(math.log2(x) / 8), byteorder="big")
 
 

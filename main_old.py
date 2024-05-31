@@ -3,7 +3,11 @@ import random
 import json
 import timeit
 import sys
+<<<<<<< HEAD
 from main import *
+=======
+
+>>>>>>> origin/master
 
 # s = 'affffffffffafsfaaaaaaaaaaasfwagsgфафаhc♠♥♥☻♣○☻♦U♣♠7+♣♥♣+☺☺♂☺i♣affffffffffafsfaaaaaaaaaaasfwagsgфафаhc♠♥♥☻♣○☻♦U♣♠7+♣♥♣+☺☺♂☺i♣affffffffffafsfaaaaaaaaaaasfwagsgфафаhc♠♥♥☻♣○☻♦U♣♠7+♣♥♣+☺☺♂☺i♣affffffffffafsfaaaaaaaaaaasfwagsgфафаhc♠♥♥☻♣○☻♦U♣♠7+♣♥♣+☺☺♂☺i♣'
 
@@ -138,6 +142,7 @@ def rsa_encryption(message, size_key):
 
 
 # func_rsa(s)
+<<<<<<< HEAD
 # print(timeit.timeit('func()', number=10, globals=globals()))
 
 class RSA:
@@ -147,3 +152,6 @@ class RSA:
 
     def dec(self):
         rsa_decryption()
+=======
+# print(timeit.timeit('func()', number=10, globals=globals()))
+>>>>>>> origin/master

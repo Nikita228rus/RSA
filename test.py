@@ -1,8 +1,5 @@
 import random
 
-
-
-
 def generation_prime_determinate_size(k, flag=['b', []]):
     binary = []
     flag_start = flag.copy()

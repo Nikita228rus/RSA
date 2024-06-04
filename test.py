@@ -1,4 +1,8 @@
 import random
+import json
+from conf import test_miller2, generation_prime
+from sha import *
+import time
 
 def generation_prime_determinate_size(k, flag=['b', []]):
     binary = []

